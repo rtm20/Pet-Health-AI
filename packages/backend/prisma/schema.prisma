@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  firstName     String?
+  lastName      String?
+  phone         String?
+  profileImage  String?
+  isVerified    Boolean  @default(false)
+  verificationToken String?
+  resetToken    String?
+  resetTokenExpires DateTime?
+  pets          Pet[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Pet {
+  id               String            @id @default(cuid())
+  userId           String
+  name             String
+  species          String            // dog, cat, bird, etc.
+  breed            String?
+  birthDate        DateTime?
+  weight           Float?
+  gender           String?           // male, female, unknown
+  color            String?
+  profileImageUrl  String?
+  microchipNumber  String?
+  isActive         Boolean           @default(true)
+  notes            String?
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  healthAnalyses   HealthAnalysis[]
+  vetRecords       VetRecord[]
+  vaccinations     Vaccination[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@map("pets")
+}
+
+model HealthAnalysis {
+  id                  String   @id @default(cuid())
+  petId               String
+  imageUrl            String
+  originalFilename    String?
+  analysisType        String   // skin, eyes, general, ears, teeth
+  aiModelVersion      String?
+  modelProvider       String   // openai, custom, fallback
+  healthStatus        String   // healthy, minor_concern, needs_attention, urgent
+  confidenceScore     Float
+  detectedConditions  String   // JSON array of detected conditions
+  recommendations     String?  // JSON array of recommendations
+  severity            String   // low, medium, high, critical
+  followUpNeeded      Boolean  @default(false)
+  followUpDate        DateTime?
+  veterinarianNotes   String?
+  pet                 Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("health_analyses")
+}
+
+model VetRecord {
+  id                String    @id @default(cuid())
+  petId             String
+  visitDate         DateTime
+  veterinarianName  String
+  clinicName        String?
+  visitType         String    // checkup, emergency, surgery, vaccination
+  chiefComplaint    String?
+  diagnosis         String?
+  treatment         String?
+  medications       String?   // JSON array
+  followUpDate      DateTime?
+  followUpNotes     String?
+  cost              Float?
+  attachments       String?   // JSON array of file URLs
+  pet               Pet       @relation(fields: [petId], references: [id], onDelete: Cascade)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("vet_records")
+}
+
+model Vaccination {
+  id              String    @id @default(cuid())
+  petId           String
+  vaccineName     String
+  vaccineLot      String?
+  veterinarianName String
+  clinicName      String?
+  dateAdministered DateTime
+  expirationDate  DateTime?
+  nextDueDate     DateTime?
+  isCore          Boolean   @default(true)
+  notes           String?
+  pet             Pet       @relation(fields: [petId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("vaccinations")
+}
+
+model ApiUsage {
+  id            String   @id @default(cuid())
+  userId        String?
+  endpoint      String
+  method        String
+  statusCode    Int
+  responseTime  Int      // milliseconds
+  userAgent     String?
+  ipAddress     String?
+  timestamp     DateTime @default(now())
+
+  @@map("api_usage")
+}

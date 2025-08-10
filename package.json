@@ -1,0 +1,64 @@
+{
+  "name": "ai-pet-health-monitor",
+  "private": true,
+  "version": "1.0.0",
+  "description": "AI-powered pet health monitoring application with custom ML model and full-stack architecture",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd packages/frontend && npm run dev",
+    "dev:backend": "cd packages/backend && npm run dev",
+    "dev:ai": "cd packages/ai-model && python app.py",
+    "dev:legacy": "vite",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd packages/frontend && npm run build",
+    "build:backend": "cd packages/backend && npm run build",
+    "build:legacy": "vite build",
+    "test": "npm run test:frontend && npm run test:backend",
+    "test:frontend": "cd packages/frontend && npm test",
+    "test:backend": "cd packages/backend && npm test",
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "lint:frontend": "cd packages/frontend && npm run lint",
+    "lint:backend": "cd packages/backend && npm run lint",
+    "lint:legacy": "eslint .",
+    "preview": "vite preview",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up",
+    "docker:prod": "docker-compose -f docker-compose.prod.yml up",
+    "db:migrate": "cd packages/backend && npx prisma migrate dev",
+    "db:generate": "cd packages/backend && npx prisma generate",
+    "db:studio": "cd packages/backend && npx prisma studio",
+    "setup": "npm install && npm run setup:packages",
+    "setup:packages": "cd packages/frontend && npm install && cd ../backend && npm install"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.30.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.6.0",
+    "concurrently": "^8.2.0",
+    "eslint": "^9.30.1",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.0",
+    "vite": "^5.4.10"
+  },
+  "keywords": [
+    "ai",
+    "pet-health",
+    "machine-learning",
+    "react",
+    "typescript",
+    "nodejs",
+    "computer-vision"
+  ],
+  "author": "AI Pet Health Team",
+  "license": "MIT"
+}
