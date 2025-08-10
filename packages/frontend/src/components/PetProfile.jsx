@@ -139,7 +139,7 @@ const PetProfile = ({ selectedPet, setSelectedPet }) => {
                   onChange={handleInputChange}
                 />
               ) : (
-                <div style={{ fontSize: '1.2rem', color: '#4a5568' }}>{selectedPet.age} years</div>
+                <div style={{ fontSize: '1.2rem', color: '#4a5568' }}>{selectedPet.age.years} year{selectedPet.age.years !== 1 ? 's' : ''} {selectedPet.age.months > 0 ? `${selectedPet.age.months} month${selectedPet.age.months !== 1 ? 's' : ''}` : ''}</div>
               )}
             </div>
 

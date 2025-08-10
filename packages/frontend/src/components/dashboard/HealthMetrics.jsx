@@ -4,8 +4,8 @@ import {
   ScaleIcon,
   FireIcon,
   ClockIcon,
-  TrendingUpIcon,
-  TrendingDownIcon
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon
 } from '@heroicons/react/24/outline';
 
 const HealthMetrics = ({ pet }) => {
@@ -37,8 +37,8 @@ const HealthMetrics = ({ pet }) => {
   };
 
   const getTrendIcon = (trend) => {
-    if (trend === 'up') return <TrendingUpIcon className="h-4 w-4 text-green-500" />;
-    if (trend === 'down') return <TrendingDownIcon className="h-4 w-4 text-red-500" />;
+    if (trend === 'up') return <ArrowTrendingUpIcon className="h-4 w-4 text-green-500" />;
+    if (trend === 'down') return <ArrowTrendingDownIcon className="h-4 w-4 text-red-500" />;
     return <div className="h-4 w-4 bg-gray-400 rounded-full"></div>;
   };
 

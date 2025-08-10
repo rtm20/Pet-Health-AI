@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: pet-health-ai
+Version: 0.1
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: tensorflow
+Requires-Dist: tensorflow-hub
+Requires-Dist: torch
+Requires-Dist: torchvision
+Requires-Dist: Pillow
+Requires-Dist: numpy
+Requires-Dist: python-multipart
+Dynamic: requires-dist

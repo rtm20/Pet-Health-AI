@@ -108,18 +108,18 @@ const HealthAnalysisPage = () => {
     setDragActive(false);
   };
 
-  // Simulate AI analysis with realistic processing time and results
+  // Perform AI analysis using the backend service
   const performAnalysis = async () => {
     if (!selectedImage || !selectedPet) return;
 
     setAnalyzing(true);
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 3000));
-
-      // Generate realistic analysis results
-      const mockResults = generateMockAnalysis(analysisType);
+      const response = await healthService.analyzeHealth(
+        selectedImage.file,
+        selectedPet.id,
+        analysisType
+      );
       
       const analysisData = {
         id: Date.now(),
@@ -128,20 +128,17 @@ const HealthAnalysisPage = () => {
         image: selectedImage.preview,
         analysisType,
         timestamp: new Date(),
-        results: mockResults,
-        confidence: mockResults.confidence,
-        status: mockResults.status
+        results: response.results,
+        confidence: response.results.confidence,
+        status: response.results.health_status
       };
 
       setAnalysisResult(analysisData);
       setAnalysisHistory(prev => [analysisData, ...prev.slice(0, 4)]); // Keep last 5
 
-      // In real app, save to backend
-      // await analyzePhoto(selectedPet.id, selectedImage.file, analysisType);
-
     } catch (error) {
       console.error('Analysis failed:', error);
-      alert('Analysis failed. Please try again.');
+      alert(error.response?.data?.detail || 'Analysis failed. Please try again.');
     } finally {
       setAnalyzing(false);
     }
@@ -529,7 +526,7 @@ const HealthAnalysisPage = () => {
               </div>
               <div className="font-semibold text-gray-900">{selectedPet.name}</div>
               <div className="text-sm text-gray-600">
-                {selectedPet.breed} • {selectedPet.age} years
+                {selectedPet.breed} • {selectedPet.age.years} year{selectedPet.age.years !== 1 ? 's' : ''} {selectedPet.age.months > 0 ? `${selectedPet.age.months} month${selectedPet.age.months !== 1 ? 's' : ''}` : ''}
               </div>
             </div>
           </div>

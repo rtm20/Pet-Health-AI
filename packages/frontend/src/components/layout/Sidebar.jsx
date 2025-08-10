@@ -100,7 +100,7 @@ const Sidebar = () => {
                   <div className="flex-1 min-w-0">
                     <div className="font-medium truncate">{pet.name}</div>
                     <div className="text-xs text-gray-500">
-                      {pet.breed} • {pet.age} years
+                      {pet.breed} • {pet.age.years} year{pet.age.years !== 1 ? 's' : ''} {pet.age.months > 0 ? `${pet.age.months} month${pet.age.months !== 1 ? 's' : ''}` : ''}
                     </div>
                     {selectedPet?.id === pet.id && (
                       <div className="text-xs text-green-600 font-medium mt-1">

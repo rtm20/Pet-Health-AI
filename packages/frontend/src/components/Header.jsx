@@ -15,7 +15,7 @@ const Header = ({ selectedPet }) => {
         />
         <div className="pet-info">
           <h3>{selectedPet.name}</h3>
-          <p>{selectedPet.breed} • {selectedPet.age} years</p>
+          <p>{selectedPet.breed} • {selectedPet.age.years} year{selectedPet.age.years !== 1 ? 's' : ''} {selectedPet.age.months > 0 ? `${selectedPet.age.months} month${selectedPet.age.months !== 1 ? 's' : ''}` : ''}</p>
         </div>
       </div>
     </header>

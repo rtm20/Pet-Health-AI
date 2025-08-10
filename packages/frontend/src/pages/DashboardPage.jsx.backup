@@ -294,7 +294,7 @@ const DashboardPage = () => {
                   </div>
                   <div className="font-semibold text-gray-900">{selectedPet.name}</div>
                   <div className="text-sm text-gray-600">
-                    {selectedPet.breed} • {selectedPet.age} years
+                    {selectedPet.breed} • {selectedPet.age.years} year{selectedPet.age.years !== 1 ? 's' : ''} {selectedPet.age.months > 0 ? `${selectedPet.age.months} month${selectedPet.age.months !== 1 ? 's' : ''}` : ''}
                   </div>
                   <Link
                     to={`/pets/${selectedPet.id}`}

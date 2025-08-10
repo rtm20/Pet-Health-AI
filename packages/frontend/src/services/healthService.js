@@ -1,157 +1,64 @@
+import axios from 'axios';
 import { apiService } from './apiService';
 
+const API_BASE_URL = 'http://localhost:8000/api/v1';
+
 class HealthService {
-  async analyzePhoto(petId, photoFile, symptoms = []) {
-    const response = await apiService.uploadFile(
-      `/health/analyze`,
-      photoFile,
-      {
-        petId,
-        symptoms: JSON.stringify(symptoms)
-      }
-    );
-    return response.analysis;
-  }
-
-  async getHealthAnalyses(petId) {
-    const response = await apiService.get(`/health/analyses?petId=${petId}`);
-    return response.analyses;
-  }
-
-  async getAnalysisById(analysisId) {
-    const response = await apiService.get(`/health/analyses/${analysisId}`);
-    return response.analysis;
-  }
-
-  async updateAnalysis(analysisId, updateData) {
-    const response = await apiService.put(`/health/analyses/${analysisId}`, updateData);
-    return response.analysis;
-  }
-
-  async deleteAnalysis(analysisId) {
-    const response = await apiService.delete(`/health/analyses/${analysisId}`);
-    return response;
-  }
-
-  // Vet Records
-  async createVetRecord(petId, recordData) {
-    const response = await apiService.post(`/health/vet-records`, {
-      petId,
-      ...recordData
+  constructor() {
+    this.api = axios.create({
+      baseURL: API_BASE_URL,
+      headers: {
+        'Accept': 'application/json',
+      },
     });
-    return response.record;
   }
-
-  async getVetRecords(petId) {
-    const response = await apiService.get(`/health/vet-records?petId=${petId}`);
-    return response.records;
-  }
-
-  async getVetRecordById(recordId) {
-    const response = await apiService.get(`/health/vet-records/${recordId}`);
-    return response.record;
-  }
-
-  async updateVetRecord(recordId, recordData) {
-    const response = await apiService.put(`/health/vet-records/${recordId}`, recordData);
-    return response.record;
-  }
-
-  async deleteVetRecord(recordId) {
-    const response = await apiService.delete(`/health/vet-records/${recordId}`);
-    return response;
-  }
-
-  // Vaccinations
-  async createVaccination(petId, vaccinationData) {
-    const response = await apiService.post(`/health/vaccinations`, {
-      petId,
-      ...vaccinationData
+  constructor() {
+    this.api = axios.create({
+      baseURL: API_BASE_URL,
+      headers: {
+        'Accept': 'application/json',
+      },
     });
-    return response.vaccination;
   }
 
-  async getVaccinations(petId) {
-    const response = await apiService.get(`/health/vaccinations?petId=${petId}`);
-    return response.vaccinations;
+  async analyzeHealth(image, petId, analysisType = 'general') {
+    try {
+      const formData = new FormData();
+      formData.append('image', image);
+      formData.append('pet_id', petId);
+      formData.append('analysis_type', analysisType);
+
+      const response = await this.api.post('/health/analyze', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Error analyzing pet health:', error);
+      throw error;
+    }
   }
 
-  async updateVaccination(vaccinationId, vaccinationData) {
-    const response = await apiService.put(`/health/vaccinations/${vaccinationId}`, vaccinationData);
-    return response.vaccination;
+  async getAnalysisTypes() {
+    try {
+      const response = await this.api.get('/health/analysis-types');
+      return response.data.analysis_types;
+    } catch (error) {
+      console.error('Error fetching analysis types:', error);
+      throw error;
+    }
   }
 
-  async deleteVaccination(vaccinationId) {
-    const response = await apiService.delete(`/health/vaccinations/${vaccinationId}`);
-    return response;
-  }
-
-  // Health Insights and Analytics
-  async getHealthInsights(petId) {
-    const response = await apiService.get(`/health/insights/${petId}`);
-    return response.insights;
-  }
-
-  async getHealthTrends(petId, timeRange = '6months') {
-    const response = await apiService.get(`/health/trends/${petId}?range=${timeRange}`);
-    return response.trends;
-  }
-
-  async generateHealthReport(petId, dateRange) {
-    const response = await apiService.post(`/health/reports/generate`, {
-      petId,
-      dateRange
-    });
-    return response.report;
-  }
-
-  async getHealthReports(petId) {
-    const response = await apiService.get(`/health/reports?petId=${petId}`);
-    return response.reports;
-  }
-
-  // Symptoms and Conditions
-  async getCommonSymptoms() {
-    const response = await apiService.get('/health/symptoms');
-    return response.symptoms;
-  }
-
-  async getConditionInfo(conditionName) {
-    const response = await apiService.get(`/health/conditions/${conditionName}`);
-    return response.condition;
-  }
-
-  async searchConditions(query) {
-    const response = await apiService.get(`/health/conditions/search?q=${encodeURIComponent(query)}`);
-    return response.conditions;
-  }
-
-  // Emergency and Alerts
-  async checkEmergencySymptoms(petId, symptoms) {
-    const response = await apiService.post('/health/emergency-check', {
-      petId,
-      symptoms
-    });
-    return response.assessment;
-  }
-
-  async getHealthAlerts(petId) {
-    const response = await apiService.get(`/health/alerts/${petId}`);
-    return response.alerts;
-  }
-
-  async markAlertAsRead(alertId) {
-    const response = await apiService.put(`/health/alerts/${alertId}/read`);
-    return response;
-  }
-
-  // AI Model Feedback
-  async submitFeedback(analysisId, feedback) {
-    const response = await apiService.post(`/health/feedback`, {
-      analysisId,
-      feedback
-    });
-    return response;
+  async getAnalysisHistory(petId) {
+    try {
+      const response = await this.api.get(`/health/history/${petId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching analysis history:', error);
+      throw error;
+    }
   }
 }
 
